@@ -110,7 +110,7 @@ if(!isset($_SESSION["username"])){
       var id = $(this).attr('at');
 
       
-  var r=confirm("Click the OK button now!");
+  var r=confirm("Do You Really Want To Delete!");
 if (r==true)
 {
   $.ajax({
@@ -124,7 +124,7 @@ if (r==true)
 }
 else
 {
-  alert("You pressed Cancel!");
+  // alert("You pressed Cancel!");
 }
 });
 

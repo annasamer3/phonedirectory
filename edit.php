@@ -5,8 +5,7 @@
         $pId = $_GET['id'];
         $query = "SELECT * FROM `person` WHERE pId = $pId";
         $result = mysqli_query($connection, $query);
-        
-      $row = $result->fetch_assoc();
+        $row = $result->fetch_assoc();
     }
 ?>
 <!DOCTYPE html>
