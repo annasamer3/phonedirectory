@@ -15,11 +15,11 @@ if(!isset($_SESSION["username"])){
         $pId = $_GET['id'];
         $query = "DELETE FROM `person` WHERE pId = $pId";
         $result = mysqli_query($connection, $query);
-         header("location: welcome.php" , "refresh");
+         
         if($query){
-            $smsg = "User Deleted Successfully.";
+            echo json_encode("Delete Successfully");
         }else{
-            $fmsg ="User Registration Failed";
+            echo json_encode("Failed To Delete");
         }
     }
     // If the values are posted, insert them into the database.
@@ -75,9 +75,9 @@ if(!isset($_SESSION["username"])){
         <th><?php echo $row["pName"]; ?></th>
         <th><?php echo $row["pNumber"]; ?></th>
     <th> 
-        <a id="add" value="<?php echo $row["pId"] ?>" class="btn btn-primary">Add</a>
+        <a type="button" value="<?php echo $row["pId"] ?>" class="btn btn-primary">Add</a>
         <a href="edit.php?id=<?php echo $row["pId"]?> " value="<?php echo $row["pId"] ?>" class="btn btn-default">Edit</a>
-        <a href="welcome.php?id=<?php echo $row["pId"]?> " value="<?php echo $row["pId"] ?>" class="btn btn-danger">Delete</a>
+        <a type="button" at="<?php echo $row["pId"] ?>" class="add btn btn-danger">Delete</a>
     </th>
       </tr>
     <?php }
@@ -105,11 +105,22 @@ if(!isset($_SESSION["username"])){
 
 </body>
 <script type="text/javascript">
-    $( "#add" ).click(function() {
+    $( ".add" ).click(function() {
+      
+      var id = $(this).attr('at');
+
+      
   var r=confirm("Click the OK button now!");
 if (r==true)
 {
-  alert("You pressed OK!");
+  $.ajax({
+    type: "GET",
+    url: 'welcome.php',
+    data: {id: id},
+    success: function(data){
+        location.reload();
+    }
+});
 }
 else
 {
