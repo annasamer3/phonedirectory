@@ -11,6 +11,18 @@ if(!isset($_SESSION["username"])){
   <?php
     require('connect.php');
     // If the values are posted, insert them into the database.
+    if (isset($_GET['id'])){
+        $pId = $_GET['id'];
+        $query = "DELETE FROM `person` WHERE pId = $pId";
+        $result = mysqli_query($connection, $query);
+         header("location: welcome.php" , "refresh");
+        if($query){
+            $smsg = "User Deleted Successfully.";
+        }else{
+            $fmsg ="User Registration Failed";
+        }
+    }
+    // If the values are posted, insert them into the database.
     if (isset($_POST['pName']) && isset($_POST['pNumber'])){
         $UserName = $_POST['pName'];
         $AddNumber = $_POST['pNumber'];
@@ -18,6 +30,7 @@ if(!isset($_SESSION["username"])){
         $query = "INSERT INTO `person` (pName, pNumber) VALUES ('$UserName', '$AddNumber')";
         $result = mysqli_query($connection, $query);
         if($result){
+            header("location: welcome.php" , "refresh");
             $smsg = "User Created Successfully.";
         }else{
             $fmsg ="User Registration Failed";
@@ -38,6 +51,7 @@ if(!isset($_SESSION["username"])){
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 </head>
 <body>
     <div class="page-header" style="margin-left: 30px;">
@@ -61,9 +75,9 @@ if(!isset($_SESSION["username"])){
         <th><?php echo $row["pName"]; ?></th>
         <th><?php echo $row["pNumber"]; ?></th>
     <th> 
-        <a href="add.php" value="<?php echo $row["pId"] ?>" class="btn btn-primary">Add</a>
-        <a href="edit.php" value="<?php echo $row["pId"] ?>" class="btn btn-default">Edit</a>
-        <a href="delete.php" value="<?php echo $row["pId"] ?>" class="btn btn-danger">Delete</a>
+        <a id="add" value="<?php echo $row["pId"] ?>" class="btn btn-primary">Add</a>
+        <a href="edit.php?id=<?php echo $row["pId"]?> " value="<?php echo $row["pId"] ?>" class="btn btn-default">Edit</a>
+        <a href="welcome.php?id=<?php echo $row["pId"]?> " value="<?php echo $row["pId"] ?>" class="btn btn-danger">Delete</a>
     </th>
       </tr>
     <?php }
@@ -76,9 +90,9 @@ if(!isset($_SESSION["username"])){
 </div>
 <br>
 <form class="dataEntry" method="post" style="margin-left: 400px;">
-  UserName: <input type="text" name="pName" style="margin-left: 9px;">
+  UserName: <input required type="text" name="pName" style="margin-left: 9px;">
 <br> <br>
-    AddNumber: <input type="text" name="pNumber">
+    AddNumber: <input required type="text" name="pNumber">
     <br> <br>
      <button class="btn type="submit" style="margin-left: 80px;">Submit</button>
 </form>
@@ -90,4 +104,18 @@ if(!isset($_SESSION["username"])){
     </p>
 
 </body>
+<script type="text/javascript">
+    $( "#add" ).click(function() {
+  var r=confirm("Click the OK button now!");
+if (r==true)
+{
+  alert("You pressed OK!");
+}
+else
+{
+  alert("You pressed Cancel!");
+}
+});
+
+</script>
 </html>
