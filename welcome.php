@@ -26,7 +26,12 @@ if(!isset($_SESSION["username"])){
     if (isset($_POST['pName']) && isset($_POST['pNumber'])){
         $UserName = $_POST['pName'];
         $AddNumber = $_POST['pNumber'];
- 
+        
+        if($_POST['pId']){
+          $pId = $_POST['pId'];
+          $query = "UPDATE `person` SET `pName`='$UserName',`pNumber`='$AddNumber' WHERE `pId` = '$pId'";
+          mysqli_query($connection, $query);
+        }else{
         $query = "INSERT INTO `person` (pName, pNumber) VALUES ('$UserName', '$AddNumber')";
         $result = mysqli_query($connection, $query);
         if($result){
@@ -35,6 +40,7 @@ if(!isset($_SESSION["username"])){
         }else{
             $fmsg ="User Registration Failed";
         }
+      }
 
     }
     $query = "SELECT * FROM `person`";
@@ -89,12 +95,12 @@ if(!isset($_SESSION["username"])){
   </table>
 </div>
 <br>
-<form class="dataEntry" method="post" style="margin-left: 400px;">
-  UserName: <input required type="text" name="pName" style="margin-left: 9px;">
+<form class="dataEntry alert alert-success" method="post" style="margin-left: 450px; margin-right: 450px;">
+  UserName: <input required type="text" name="pName" class="form-control">
 <br> <br>
-    AddNumber: <input required type="text" name="pNumber">
+    AddNumber: <input required type="text" class="form-control" name="pNumber">
     <br> <br>
-     <button class="btn type="submit" style="margin-left: 80px;">Submit</button>
+     <button class="btn btn-lg btn-primary">Submit</button>
 </form>
 
 <br>
@@ -110,7 +116,7 @@ if(!isset($_SESSION["username"])){
       var id = $(this).attr('at');
 
       
-  var r=confirm("Do You Really Want To Delete!");
+  var r=confirm("Click the OK button now!");
 if (r==true)
 {
   $.ajax({
@@ -124,7 +130,7 @@ if (r==true)
 }
 else
 {
-  // alert("You pressed Cancel!");
+  alert("You pressed Cancel!");
 }
 });
 
