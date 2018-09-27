@@ -1,4 +1,14 @@
 <?php
+// Initialize the session
+session_start();
+ $userid=$_SESSION['id'];
+// Check if the user is logged in, if not then redirect him to login page
+if(!isset($_SESSION["id"])){
+    header("location: login.php");
+    exit;
+}
+?>
+<?php
     require('connect.php');
     // If the values are posted, insert them into the database.
     if (isset($_GET['id'])){

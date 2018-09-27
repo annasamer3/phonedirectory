@@ -1,9 +1,9 @@
 <?php
 // Initialize the session
 session_start();
- 
+ $userid=$_SESSION['id'];
 // Check if the user is logged in, if not then redirect him to login page
-if(!isset($_SESSION["username"])){
+if(!isset($_SESSION["id"])){
     header("location: login.php");
     exit;
 }
@@ -27,12 +27,12 @@ if(!isset($_SESSION["username"])){
         $UserName = $_POST['pName'];
         $AddNumber = $_POST['pNumber'];
         
-        if($_POST['pId']){
+        if(isset($_POST['pId'])){
           $pId = $_POST['pId'];
           $query = "UPDATE `person` SET `pName`='$UserName',`pNumber`='$AddNumber' WHERE `pId` = '$pId'";
           mysqli_query($connection, $query);
         }else{
-        $query = "INSERT INTO `person` (pName, pNumber) VALUES ('$UserName', '$AddNumber')";
+        $query = "INSERT INTO `person` (pName, pNumber, created_user_id) VALUES ('$UserName', '$AddNumber', '$userid')";
         $result = mysqli_query($connection, $query);
         if($result){
             header("location: welcome.php" , "refresh");
@@ -43,8 +43,14 @@ if(!isset($_SESSION["username"])){
       }
 
     }
-    $query = "SELECT * FROM `person`";
+    //$query = "SELECT * FROM `person` WHERE created_user_id='$userid'";
+    //$result = mysqli_query($connection, $query);
+    $query="SELECT person.pId, numbers.phoneNumber, person.pName , person.pNumber
+    FROM person
+    LEFT JOIN numbers ON person.pId=numbers.num_pId WHERE created_user_id='$userid'";
     $result = mysqli_query($connection, $query);
+    // print_r($row = $result->fetch_assoc());
+    // die();
     ?>
  
 <!DOCTYPE html>
@@ -61,7 +67,7 @@ if(!isset($_SESSION["username"])){
 </head>
 <body>
     <div class="page-header" style="margin-left: 30px;">
-        <h1>Hi, <b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>. Welcome to our site.</h1>
+        <h1>Hi,Welcome to our site.</h1>
     </div>
 <div class="container">
   <h2>Phone Number List</h2>           
@@ -79,9 +85,9 @@ if(!isset($_SESSION["username"])){
     while($row = $result->fetch_assoc()) { ?>
              <tr>
         <th><?php echo $row["pName"]; ?></th>
-        <th><?php echo $row["pNumber"]; ?></th>
+        <th><?php echo $row["pNumber"]; ?><br><?php echo $row["phoneNumber"]; ?></th>
     <th> 
-        <a type="button" value="<?php echo $row["pId"] ?>" class="btn btn-primary">Add</a>
+        <a href="add.php?id=<?php echo $row["pId"]?> " value="<?php echo $row["pId"] ?>" class="btn btn-primary">Add</a>
         <a href="edit.php?id=<?php echo $row["pId"]?> " value="<?php echo $row["pId"] ?>" class="btn btn-default">Edit</a>
         <a type="button" at="<?php echo $row["pId"] ?>" class="add btn btn-danger">Delete</a>
     </th>
